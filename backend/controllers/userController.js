@@ -19,7 +19,7 @@ const authUser = async (req,res)=>{
        })
 
     }else{
-        res.status(401);
+        res.status(400);
         throw new Error("Invalid login details")
     }
 
@@ -75,10 +75,15 @@ const updateUserProfile = async(req,res)=>{
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email
         if(req.body.password){
-                user.email = req.body.password 
+                user.password = req.body.password 
         }
         const updatedUser =  await user.save();
-        res.json({message:"User updated ssuccessfully"})
+       res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+        });
           
     }else{
         res.status(400).json({message:"User not exists"})

@@ -23,9 +23,10 @@ const getProducts = async(req,res)=>{
 
     const count = await Product.countDocuments({ ... keyword });
     const products = await Product.find({ ...keyword })
+    .sort({ _id: 1 })
     .limit(pageSize)
-    .skip(pageSize-(page-1));
-    res.json({products,count,pages:Math.ceil(count/pageSize)});
+    .skip(pageSize * (page - 1));
+    res.json({ products, page, pages: Math.ceil(count / pageSize) });
 
 }
 
@@ -109,10 +110,6 @@ const createProductReview = async (req,res) =>{
    
     if(product){
       
-
-        
-
-
         const alreadyReviewd = product.reviews.find((r)=> r.user.toString() === req.user._id.toString())
         if(alreadyReviewd){
             res.status(400);

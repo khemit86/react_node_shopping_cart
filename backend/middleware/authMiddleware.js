@@ -2,16 +2,18 @@ import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
 
 const protect = async (req,res,next)=>{
+   
     let token;
     token = req.cookies.jwt;
     if(token){
         try{
             const decoded =  jwt.verify(token,process.env.JWT_SECRET);
+        
             req.user = await User.findById(decoded.userId).select('-password');
             next();
         }
         catch(error){
-            console.log(error);
+            
             res.status(401);
             throw  new Error('Not authorized, token failed')
 
@@ -32,7 +34,7 @@ const admin = (req,res,next)=>{
         next()
     }else{
         res.status(401);
-        throw new Error('Not athrized as an admin');
+        throw new Error('Not authorized as an admin');
     }
 
 }
